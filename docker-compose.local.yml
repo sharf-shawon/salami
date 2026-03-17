@@ -1,0 +1,51 @@
+volumes:
+  salami_local_postgres_data: {}
+  salami_local_postgres_data_backups: {}
+  
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: salami_local_django
+    container_name: salami_local_django
+    depends_on:
+      - postgres
+    volumes:
+      - /app/.venv
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - '8000:8000'
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: salami_production_postgres
+    container_name: salami_local_postgres
+    volumes:
+      - salami_local_postgres_data:/var/lib/postgresql/18/docker
+      - salami_local_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.local/.postgres
+
+  node:
+    build:
+      context: .
+      dockerfile: ./compose/local/node/Dockerfile
+    image: salami_local_node
+    container_name: salami_local_node
+    depends_on:
+      - django
+    volumes:
+      - .:/app:z
+      # http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html
+      - /app/node_modules
+    command: npm run dev
+    ports:
+      - '3000:3000'
