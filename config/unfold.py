@@ -18,14 +18,14 @@ UNFOLD = {
     # "SITE_ICON": lambda request: static("icon.svg")
     # both modes, optimise for 32px height
     "SITE_ICON": {
-        "light": lambda request: static("icon-light.svg"),  # light mode
-        "dark": lambda request: static("icon-dark.svg"),  # dark mode
+        "light": lambda request: static("images/favicons/favicon.ico"),  # light mode
+        "dark": lambda request: static("images/favicons/favicon.ico"),  # dark mode
     },
     # "SITE_LOGO": lambda request: static("logo.svg")
     # both modes, optimise for 32px height
     "SITE_LOGO": {
-        "light": lambda request: static("logo-light.svg"),  # light mode
-        "dark": lambda request: static("logo-dark.svg"),  # dark mode
+        "light": lambda request: static("images/favicons/favicon.ico"),  # light mode
+        "dark": lambda request: static("images/favicons/favicon.ico"),  # dark mode
     },
     "SITE_SYMBOL": "speed",  # symbol from icon set
     "SITE_FAVICONS": [
@@ -33,7 +33,7 @@ UNFOLD = {
             "rel": "icon",
             "sizes": "32x32",
             "type": "image/svg+xml",
-            "href": lambda request: static("favicon.svg"),
+            "href": lambda request: static("images/favicons/favicon.ico"),
         },
     ],
     # show/hide "History" button, default: True
@@ -46,7 +46,6 @@ UNFOLD = {
     # environment name prefix in title tag
     "ENVIRONMENT_TITLE_PREFIX": "config.unfold.environment_title_prefix_callback",
     "DASHBOARD_CALLBACK": "config.unfold.dashboard_callback",
-    "THEME": "dark",  # Force theme: "dark" or "light". Will disable theme switcher
     "LOGIN": {
         "image": lambda request: static("sample/login-bg.jpg"),
         "redirect_after": lambda request: reverse_lazy("admin:APP_MODEL_changelist"),
@@ -150,6 +149,10 @@ def dashboard_callback(request, context):
         },
     )
     return context
+
+
+def environment_title_prefix_callback(request):
+    return environment_callback(request)[0]
 
 
 def environment_callback(request):
