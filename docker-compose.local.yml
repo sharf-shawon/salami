@@ -1,7 +1,6 @@
 volumes:
   salami_local_postgres_data: {}
   salami_local_postgres_data_backups: {}
-  
 
 services:
   django:

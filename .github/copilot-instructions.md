@@ -11,33 +11,34 @@
 **Primary users:** Individuals and families participating in Eid gift-giving traditions, primarily in Bangladesh and the broader Bengali-speaking diaspora.
 
 **Core problems it solves:**
+
 - Digitises and streamlines the traditionally informal process of Eid salami exchange.
 - Provides a secure, authenticated platform for monetary gift management.
 - Offers a REST API for potential mobile or third-party integrations.
 
 **Tech stack summary:**
 
-| Layer | Technology |
-|---|---|
-| Language | Python 3.13 |
-| Web framework | Django 6.0 |
-| REST API | Django REST Framework (DRF) 3.16 + drf-spectacular |
-| Authentication | django-allauth 65 (username + MFA) |
-| Database | PostgreSQL 18 (via psycopg3) |
-| Cache / Sessions | Redis 8 |
-| Task runner | `just` (local), Docker Compose |
-| Package manager | `uv` (Python), `npm` (Node) |
-| Frontend | Webpack 5 + Bootstrap 5 + Sass |
-| Admin UI | django-unfold |
-| Storage (prod) | AWS S3 via django-storages |
-| Reverse proxy | Traefik (production) |
-| ASGI server | Uvicorn |
-| WSGI server | Gunicorn |
-| Containerisation | Docker + Docker Compose |
-| CI/CD | GitHub Actions |
-| Linter/formatter | Ruff |
-| Type checker | mypy |
-| Test framework | pytest + pytest-django |
+| Layer            | Technology                                         |
+| ---------------- | -------------------------------------------------- |
+| Language         | Python 3.13                                        |
+| Web framework    | Django 6.0                                         |
+| REST API         | Django REST Framework (DRF) 3.16 + drf-spectacular |
+| Authentication   | django-allauth 65 (username + MFA)                 |
+| Database         | PostgreSQL 18 (via psycopg3)                       |
+| Cache / Sessions | Redis 8                                            |
+| Task runner      | `just` (local), Docker Compose                     |
+| Package manager  | `uv` (Python), `npm` (Node)                        |
+| Frontend         | Webpack 5 + Bootstrap 5 + Sass                     |
+| Admin UI         | django-unfold                                      |
+| Storage (prod)   | AWS S3 via django-storages                         |
+| Reverse proxy    | Traefik (production)                               |
+| ASGI server      | Uvicorn                                            |
+| WSGI server      | Gunicorn                                           |
+| Containerisation | Docker + Docker Compose                            |
+| CI/CD            | GitHub Actions                                     |
+| Linter/formatter | Ruff                                               |
+| Type checker     | mypy                                               |
+| Test framework   | pytest + pytest-django                             |
 
 ---
 
@@ -179,6 +180,7 @@ pre-commit run --all-files
 ```
 
 Individual pre-commit hooks available:
+
 - `ruff-check` — Python linting
 - `ruff-format` — Python formatting
 - `djlint` — Django template linting
@@ -228,6 +230,7 @@ just build
 ```
 
 Access points:
+
 - Django app: `http://localhost:8000`
 - Webpack dev server: `http://localhost:3000`
 
@@ -292,11 +295,11 @@ docker compose -f docker-compose.local.yml run --rm django python manage.py chec
 - Use DRF's `DefaultRouter` in DEBUG mode and `SimpleRouter` in production (already configured in `api_router.py`).
 - **Error responses** must use DRF's standard format:
   ```json
-  {"detail": "Error message."}
+  { "detail": "Error message." }
   ```
   For field errors:
   ```json
-  {"field_name": ["Error message."]}
+  { "field_name": ["Error message."] }
   ```
 - **Pagination:** Use DRF's built-in pagination classes. Do not return unbounded list responses.
 - **OpenAPI documentation** is auto-generated via `drf-spectacular`. Annotate ViewSets with `@extend_schema` decorators when the auto-generated docs are insufficient.
@@ -315,6 +318,7 @@ docker compose -f docker-compose.local.yml run --rm django python manage.py chec
 ### 4.5 Minimum Expectations per Change Type
 
 **New feature:**
+
 - Unit tests covering the happy path and primary edge cases.
 - Integration/API tests if API endpoints are involved.
 - Docstring on all new public functions/methods/classes.
@@ -323,10 +327,12 @@ docker compose -f docker-compose.local.yml run --rm django python manage.py chec
 - Add a `DECISIONS.md` entry if a non-trivial architectural or library decision was made.
 
 **Bug fix:**
+
 - A regression test that would have caught the bug (add to the relevant `tests/` directory).
 - A `MISTAKES.md` entry describing the bug, root cause, fix, and prevention rule.
 
 **Refactor:**
+
 - No observable behaviour change.
 - Existing tests must continue to pass without modification (unless tests themselves were incorrect).
 - Test coverage must not decrease.
@@ -351,24 +357,24 @@ docker compose -f docker-compose.local.yml run --rm django python manage.py chec
 - **type**: one of the allowed types (see below).
 - **scope**: optional; use the Django app name, module, or affected area (e.g. `users`, `api`, `migrations`, `ci`, `deps`).
 - **short description**: imperative, lowercase, no trailing period, ≤72 characters.
-- **body**: explain *why* and *what*, not *how*. Wrap at 72 characters.
+- **body**: explain _why_ and _what_, not _how_. Wrap at 72 characters.
 - **footer**: reference issues (`Closes #123`), breaking changes (`BREAKING CHANGE: ...`).
 
 ### 5.2 Allowed Types
 
-| Type | When to use |
-|---|---|
-| `feat` | A new user-facing feature |
-| `fix` | A bug fix |
-| `docs` | Documentation changes only |
-| `style` | Formatting, whitespace — no logic change |
-| `refactor` | Code restructuring with no behaviour change |
-| `perf` | Performance improvement |
-| `test` | Adding or correcting tests |
-| `chore` | Build, tooling, dependency updates |
-| `ci` | Changes to GitHub Actions or CI configuration |
-| `security` | Security-related fixes or hardening |
-| `kb` | Knowledge-base-only updates (LEARNINGS, MISTAKES, DECISIONS) |
+| Type       | When to use                                                  |
+| ---------- | ------------------------------------------------------------ |
+| `feat`     | A new user-facing feature                                    |
+| `fix`      | A bug fix                                                    |
+| `docs`     | Documentation changes only                                   |
+| `style`    | Formatting, whitespace — no logic change                     |
+| `refactor` | Code restructuring with no behaviour change                  |
+| `perf`     | Performance improvement                                      |
+| `test`     | Adding or correcting tests                                   |
+| `chore`    | Build, tooling, dependency updates                           |
+| `ci`       | Changes to GitHub Actions or CI configuration                |
+| `security` | Security-related fixes or hardening                          |
+| `kb`       | Knowledge-base-only updates (LEARNINGS, MISTAKES, DECISIONS) |
 
 > Use `kb` exclusively for commits that only update files in `.github/agent-knowledge-base/`. This makes knowledge base updates easy to trace in the git history.
 
@@ -496,11 +502,11 @@ style: apply ruff format to salami/users/models.py
 
 The knowledge base lives in `.github/agent-knowledge-base/` and consists of three files:
 
-| File | Purpose |
-|---|---|
+| File           | Purpose                                                        |
+| -------------- | -------------------------------------------------------------- |
 | `LEARNINGS.md` | Non-obvious insights, patterns, and lessons that proved useful |
-| `MISTAKES.md` | Mistakes, root causes, fixes, and prevention rules |
-| `DECISIONS.md` | Architectural, library, and design decisions with rationale |
+| `MISTAKES.md`  | Mistakes, root causes, fixes, and prevention rules             |
+| `DECISIONS.md` | Architectural, library, and design decisions with rationale    |
 
 ### 8.1 When to read the knowledge base
 
